@@ -1,0 +1,16 @@
+
+
+
+
+
+### Create note
+POST https://98a64l2lp3.execute-api.ap-southeast-2.amazonaws.com/prod/shorten
+Content-Type: application/json
+
+{
+  "url": "readthenestdocument",
+}
+
+
+### GetAll notes
+GET https://98a64l2lp3.execute-api.ap-southeast-2.amazonaws.com/prod/213f
