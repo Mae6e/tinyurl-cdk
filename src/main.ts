@@ -1,43 +1,40 @@
 import { Handler } from 'aws-lambda';
-
-import { UrlRepository } from './url/url.repository';
+import * as dotenv from 'dotenv';
 import { UrlService } from './url/url.service';
+import {
+  Response,
+  CreateResponse,
+  GetResponse,
+  NotFoundResponse,
+  ErrorResponse,
+} from './utils';
 
-export const handler: Handler = async (event, context) => {
-  console.log('jadddid jadid');
+dotenv.config();
+const urlService = new UrlService();
 
-  const urlRepository = new UrlRepository();
-  await urlRepository.initialize(); // Wait for initialization
-  console.log('/urlRepository' , urlRepository);
-
-  const urlService = new UrlService(urlRepository);
-
-  console.log('/urlService' , urlService);
-
+export const handler: Handler = async (event): Promise<Response> => {
   try {
-    // Example usage
-    const testUrl = 'https://example.com';
+    const body = JSON.parse(event.body);
+    const path: string = event.path;
+    const method = event.httpMethod;
+    const code = event.pathParameters?.code;
 
-    // Shorten URL
-    const shortCode = await urlService.shorten(testUrl);
-    console.log(`Shortened: ${shortCode}`);
+    console.error('path:', path);
+    console.error('body:', body);
+    console.error('method:', method);
+    console.error('code:', code);
 
-    // Resolve URL
-    const originalUrl = await urlService.resolve(shortCode);
-    console.log(`Original: ${originalUrl}`);
-
-    // Test cache
-    console.log('Testing cache...');
-    const cachedCode = await urlService.shorten(testUrl);
-    console.log(`From cache: ${cachedCode}`);
+    if (path.indexOf('/shorten') !== -1 && method === 'POST') {
+      const response = await urlService.shorten(body.originalUrl);
+      return CreateResponse(response);
+    } else if (method === 'GET') {
+      const response = await urlService.resolve(code);
+      return GetResponse(response);
+    } else {
+      return NotFoundResponse(path);
+    }
   } catch (err) {
     console.error('Error:', err);
-  } finally {
-    await urlRepository.disconnect();
+    return ErrorResponse(err);
   }
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ message: `it is ok` }),
-  };
 };

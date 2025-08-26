@@ -9,16 +9,19 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc -w",
+    "start": "node --watch --env-file=.env dist/src/main.js",
+    "run": "concurrently npm:start:*"
   },
   "dependencies": {
     "aws-cdk-lib": "^2.211.0",
     "aws-lambda": "^1.0.7",
+    "concurrently": "^9.2.0",
     "constructs": "^10.4.2",
     "crc-32": "^1.2.2",
     "dotenv": "^17.2.1",
     "pg": "^8.16.3",
-    "redis": "^4.7.1",
+    "redis": "^5.8.2",
     "rxjs": "^7.8.2",
     "typeorm": "^0.3.25"
   },
