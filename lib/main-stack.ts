@@ -5,7 +5,6 @@ import { DatabaseStack } from './database-stack';
 import { CacheStack } from './cache-stack';
 import { ApiStack } from './api-stack';
 import { LambdaStack } from './lambda-stack';
-//import * as lambda from 'aws-cdk-lib/aws-lambda';
 
 import * as dotenv from 'dotenv';
 
@@ -20,7 +19,27 @@ export class MainStack extends cdk.Stack {
     const vpc = new ec2.Vpc(this, 'Vpc', { maxAzs: 2 });
 
     // Security Group
-    const lambdaSg = new ec2.SecurityGroup(this, 'LambdaSG', { vpc });
+    const lambdaSg = new ec2.SecurityGroup(this, 'LambdaSG', {
+      vpc,
+      allowAllOutbound: true,
+    });
+
+    //!  `0.0.0.0/0` allIp or yourIp
+    const ip = process.env.ACCESS_IP;
+
+    // Add ingress rules for your IP - PostgreSQL
+    lambdaSg.addIngressRule(
+      ec2.Peer.ipv4(ip),
+      ec2.Port.tcp(parseInt(process.env.DB_PORT as string)),
+      'Allow PostgreSQL access from my IP',
+    );
+
+    // Custom TCP - change port as needed
+    lambdaSg.addIngressRule(
+      ec2.Peer.ipv4(ip),
+      ec2.Port.tcp(parseInt(process.env.REDIS_PORT as string)),
+      'Allow custom TCP access from my IP',
+    );
 
     // Database
     const dbStack = new DatabaseStack(this, 'Database', {

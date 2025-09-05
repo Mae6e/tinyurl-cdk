@@ -17,7 +17,7 @@ export class LambdaStack extends Construct {
     // Lambda function
     this.handler = new lambda.Function(this, 'UrlHandler', {
       runtime: lambda.Runtime.NODEJS_22_X,
-      code: lambda.Code.fromAsset('src'),
+      code: lambda.Code.fromAsset('dist/src'),
       handler: 'main.handler',
       vpc: props.vpc,
       securityGroups: [props.securityGroup],

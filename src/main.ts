@@ -1,5 +1,4 @@
 import { Handler } from 'aws-lambda';
-import * as dotenv from 'dotenv';
 import { UrlService } from './url/url.service';
 import {
   Response,
@@ -9,7 +8,6 @@ import {
   ErrorResponse,
 } from './utils';
 
-dotenv.config();
 const urlService = new UrlService();
 
 export const handler: Handler = async (event): Promise<Response> => {
@@ -18,15 +16,18 @@ export const handler: Handler = async (event): Promise<Response> => {
     const path: string = event.path;
     const method = event.httpMethod;
     const code = event.pathParameters?.code;
+    const { domainName, stage } = event.requestContext;
 
-    console.error('path:', path);
-    console.error('body:', body);
-    console.error('method:', method);
-    console.error('code:', code);
+    console.log('path:', path);
+    console.log('body:', body);
+    console.log('method:', method);
+    console.log('code:', code);
+
+    await urlService.init();
 
     if (path.indexOf('/shorten') !== -1 && method === 'POST') {
       const response = await urlService.shorten(body.originalUrl);
-      return CreateResponse(response);
+      return CreateResponse(`https://${domainName}/${stage}/${response}`);
     } else if (method === 'GET') {
       const response = await urlService.resolve(code);
       return GetResponse(response);

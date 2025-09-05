@@ -1,16 +1,12 @@
 
-
-
-
-
-### Create note
+### Create shorten  url
 POST https://98a64l2lp3.execute-api.ap-southeast-2.amazonaws.com/prod/shorten
 Content-Type: application/json
 
 {
-  "url": "readthenestdocument",
+  "originalUrl": "https://theprimeagen.github.io/fem-algos/lessons/our-first-algorithms/crystal-ball",
 }
 
 
-### GetAll notes
-GET https://98a64l2lp3.execute-api.ap-southeast-2.amazonaws.com/prod/213f
+### Get url
+GET https://98a64l2lp3.execute-api.ap-southeast-2.amazonaws.com/prod/2314bd7

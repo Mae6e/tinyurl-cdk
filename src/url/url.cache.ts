@@ -3,22 +3,16 @@ import { createClient, RedisClientType } from 'redis';
 export class UrlCache {
   private redisClient: RedisClientType;
 
-  connect() {
+  async connect() {
     if (this.redisClient) return;
 
     this.redisClient = createClient({
-      url: `${process.env.REDIS_HOST}`,
+      url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
     });
     this.redisClient.on('error', console.error);
 
-    this.redisClient
-      .connect()
-      .then(() => {
-        console.log('✅ Cache initialized');
-      })
-      .catch((err) => {
-        console.error('❌ Error during Cache initialization:', err);
-      });
+    await this.redisClient.connect();
+    console.log('✅ Cache initialized');
   }
 
   async disconnect() {

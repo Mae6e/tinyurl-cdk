@@ -49,6 +49,7 @@ export class DatabaseStack extends Construct {
         vpc: props.vpc,
         credentials: rds.Credentials.fromSecret(this.credentials),
         databaseName: process.env.DB_NAME,
+        securityGroups: [props.securityGroup],
       },
     );
 

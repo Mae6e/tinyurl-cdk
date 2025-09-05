@@ -18,17 +18,12 @@ export class UrlRepository {
       database: process.env.DB_NAME,
       entities: [Url],
       synchronize: true,
+      ssl: { rejectUnauthorized: false },
     });
 
-    this.dataSource
-      .initialize()
-      .then(() => {
-        console.log('✅ DataSource initialized');
-        this.urlRepo = this.dataSource.getRepository(Url);
-      })
-      .catch((err) => {
-        console.error('❌ Error during DataSource initialization:', err);
-      });
+    await this.dataSource.initialize();
+    console.log('✅ DataSource initialized');
+    this.urlRepo = this.dataSource.getRepository(Url);
   }
 
   async disconnect() {

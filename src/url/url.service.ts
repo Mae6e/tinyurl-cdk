@@ -6,9 +6,11 @@ export class UrlService {
   private urlRepository: UrlRepository = new UrlRepository();
   private urlCache: UrlCache = new UrlCache();
 
-  constructor() {
-    this.urlRepository.connect();
-    this.urlCache.connect();
+  constructor() {}
+
+  async init() {
+    await this.urlRepository.connect();
+    await this.urlCache.connect();
   }
 
   async shorten(url: string): Promise<string> {
