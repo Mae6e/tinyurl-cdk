@@ -32,7 +32,7 @@ To deploy the project:
 # Install dependencies
 pnpm install
 
-# build 
+# build code
 pnpm run build
 
 # Bootstrap your environment (only once)
